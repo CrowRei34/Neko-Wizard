@@ -25,6 +25,11 @@ gboolean neko_app_card_get_selected(NekoAppCard *self) {
 }
 
 static void on_card_click(GtkGestureClick *gesture, int n_press, double x, double y, gpointer user_data) {
+    // The pressed signal supplies these even though selection only needs the card.
+    (void)gesture;
+    (void)n_press;
+    (void)x;
+    (void)y;
     NekoAppCard *self = NEKO_APP_CARD(user_data);
     neko_app_card_set_selected(self, !self->info->selected);
 }

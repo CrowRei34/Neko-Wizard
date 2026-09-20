@@ -5,6 +5,7 @@ static void
 on_activate (GtkApplication *app,
              gpointer        user_data)
 {
+  (void)user_data; // Required by the GtkApplication activate signal.
   neko_store_window_new (app);
 }
 
