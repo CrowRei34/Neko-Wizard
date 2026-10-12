@@ -106,7 +106,7 @@ install_pineconemc() {
     log "Downloading AppImageLauncher..."
     mkdir -p "$dir" || die "Could not create $dir"
     curl -fsSL -o "$launcher" \
-        "https://github.com/TheAssassin/AppImageLauncher/releases/download/v3.0.0-beta-3/appimagelauncher-lite-3.0.0-beta-2-gha287-x86_64.AppImage" \
+        "https://github.com/TheAssassin/AppImageLauncher/releases/download/v2.2.0/appimagelauncher-lite-2.2.0-travis995-0f91801-x86_64.AppImage" \
         || die "Failed to download AppImageLauncher"
     chmod +x "$launcher"
 
@@ -256,7 +256,7 @@ install_onlyoffice() {
     log "Downloading AppImageLauncher..."
     mkdir -p "$dir" || die "Could not create $dir"
     curl -fsSL -o "$launcher" \
-        "https://github.com/TheAssassin/AppImageLauncher/releases/download/v3.0.0-beta-3/appimagelauncher-lite-3.0.0-beta-2-gha287-x86_64.AppImage" \
+        "https://github.com/TheAssassin/AppImageLauncher/releases/download/v2.2.0/appimagelauncher-lite-2.2.0-travis995-0f91801-x86_64.AppImage" \
         || die "Failed to download AppImageLauncher"
     chmod +x "$launcher"
 
