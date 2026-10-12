@@ -33,7 +33,7 @@ static void on_line_read(GObject *source_object, GAsyncResult *res, gpointer use
     InstallTask *task = user_data;
     gsize length;
     GError *error = NULL;
-    char *line = g_data_input_stream_read_line_finish(task->stream, res, &length, &error);
+    char *line = g_data_input_stream_read_line_finish(G_DATA_INPUT_STREAM(source_object), res, &length, &error);
 
     if (line != NULL) {
         if (task->progress_cb) {

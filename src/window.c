@@ -9,11 +9,6 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-#ifdef GDK_WINDOWING_X11
-#include <gdk/x11/gdkx.h>
-#include <X11/Xlib.h>
-#endif
-
 // Layout scale. Every margin in this file is one of these or a multiple of 4,
 // so the pages stay on a single rhythm. See data/style.css for the rest.
 #define PAGE_PAD 24
@@ -98,41 +93,49 @@ static GtkCssProvider *theme_provider = NULL;
 static GFileMonitor *theme_monitor = NULL;
 
 static void go_to_gaming_page(GtkButton *btn, gpointer user_data) {
+    (void)btn; // Required by the clicked signal.
     NekoStoreWindow *self = NEKO_STORE_WINDOW(user_data);
     gtk_stack_set_visible_child(GTK_STACK(self->stack), self->gaming_page);
 }
 
 static void go_to_drawing_image_page(GtkButton *btn, gpointer user_data) {
+    (void)btn; // Required by the clicked signal.
     NekoStoreWindow *self = NEKO_STORE_WINDOW(user_data);
     gtk_stack_set_visible_child(GTK_STACK(self->stack), self->drawing_image_page);
 }
 
 static void go_to_audio_video_page(GtkButton *btn, gpointer user_data) {
+    (void)btn; // Required by the clicked signal.
     NekoStoreWindow *self = NEKO_STORE_WINDOW(user_data);
     gtk_stack_set_visible_child(GTK_STACK(self->stack), self->audio_video_page);
 }
 
 static void go_to_text_documents_page(GtkButton *btn, gpointer user_data) {
+    (void)btn; // Required by the clicked signal.
     NekoStoreWindow *self = NEKO_STORE_WINDOW(user_data);
     gtk_stack_set_visible_child(GTK_STACK(self->stack), self->text_documents_page);
 }
 
 static void go_to_social_page(GtkButton *btn, gpointer user_data) {
+    (void)btn; // Required by the clicked signal.
     NekoStoreWindow *self = NEKO_STORE_WINDOW(user_data);
     gtk_stack_set_visible_child(GTK_STACK(self->stack), self->social_page);
 }
 
 static void go_to_drivers_page(GtkButton *btn, gpointer user_data) {
+    (void)btn; // Required by the clicked signal.
     NekoStoreWindow *self = NEKO_STORE_WINDOW(user_data);
     gtk_stack_set_visible_child(GTK_STACK(self->stack), self->drivers_page);
 }
 
 static void go_to_security_page(GtkButton *btn, gpointer user_data) {
+    (void)btn; // Required by the clicked signal.
     NekoStoreWindow *self = NEKO_STORE_WINDOW(user_data);
     gtk_stack_set_visible_child(GTK_STACK(self->stack), self->security_page);
 }
 
 static void go_to_mirror_page(GtkButton *btn, gpointer user_data) {
+    (void)btn; // Required by the clicked signal.
     NekoStoreWindow *self = NEKO_STORE_WINDOW(user_data);
     gtk_stack_set_visible_child(GTK_STACK(self->stack), self->mirror_page);
 }
@@ -151,7 +154,7 @@ static void on_group_toggle_toggled(GtkCheckButton *btn, gpointer user_data) {
     }
 }
 
-static GtkWidget* create_app_group_page(NekoStoreWindow *self, const char *title, AppGroup group_filter, GtkWidget **flowbox_out, GCallback back_cb, GCallback next_cb, const char *next_btn_label, gboolean is_final_step) {
+static GtkWidget* create_app_group_page(NekoStoreWindow *self, const char *title, AppGroup group_filter, GtkWidget **flowbox_out, GCallback back_cb, GCallback next_cb, const char *next_btn_label) {
     GtkWidget *vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 
     // Header
@@ -335,6 +338,7 @@ static void system_update_finished_cb(gboolean success, gpointer user_data) {
 }
 
 static void on_install_selected_clicked(GtkButton *btn, gpointer user_data) {
+    (void)btn; // Required by the clicked signal.
     NekoStoreWindow *self = NEKO_STORE_WINDOW(user_data);
 
     // An install run is already in progress (the user can navigate back while
@@ -688,7 +692,7 @@ static void test_progress_cb(const char *line, gpointer user_data) {
 static void test_finished_cb(gboolean success, gpointer user_data) {
     NekoStoreWindow *self = NEKO_STORE_WINDOW(user_data);
     const char *text = gtk_label_get_text(GTK_LABEL(self->mirror_status_label));
-    if (!text || strlen(text) == 0 || g_str_equal(text, "Testing connectivity...")) {
+    if (!success || !text || strlen(text) == 0 || g_str_equal(text, "Testing connectivity...")) {
         gtk_label_set_text(GTK_LABEL(self->mirror_status_label), "✗ Connection failed");
     }
 }
@@ -730,6 +734,7 @@ static void on_mirror_set_finished_cb(gboolean success, gpointer user_data) {
 }
 
 static void on_mirror_next_clicked(GtkButton *btn, gpointer user_data) {
+    (void)btn; // Required by the clicked signal.
     NekoStoreWindow *self = NEKO_STORE_WINDOW(user_data);
 
     if (!self->selected_mirror) {
@@ -893,6 +898,7 @@ static void build_mirror_page(NekoStoreWindow *self) {
 }
 
 static void go_to_welcome_page(GtkButton *btn, gpointer user_data) {
+    (void)btn; // Required by the clicked signal.
     NekoStoreWindow *self = NEKO_STORE_WINDOW(user_data);
     gtk_stack_set_visible_child(GTK_STACK(self->stack), self->welcome_page);
 }
@@ -904,13 +910,13 @@ static void neko_store_window_init (NekoStoreWindow *self) {
     build_welcome_page(self);
     build_mirror_page(self);
 
-    self->gaming_page = create_app_group_page(self, "Step 1: Gaming Apps", GROUP_GAMING, &self->gaming_flowbox, G_CALLBACK(go_to_mirror_page), G_CALLBACK(go_to_drawing_image_page), "Next", FALSE);
-    self->drawing_image_page = create_app_group_page(self, "Step 2: Drawing and Image Editing", GROUP_DRAWING_IMAGE, &self->drawing_image_flowbox, G_CALLBACK(go_to_gaming_page), G_CALLBACK(go_to_audio_video_page), "Next", FALSE);
-    self->audio_video_page = create_app_group_page(self, "Step 3: Audio & Video Editing", GROUP_AUDIO_VIDEO, &self->audio_video_flowbox, G_CALLBACK(go_to_drawing_image_page), G_CALLBACK(go_to_text_documents_page), "Next", FALSE);
-    self->text_documents_page = create_app_group_page(self, "Step 4: Text Editing and Documents", GROUP_TEXT_DOCUMENTS, &self->text_documents_flowbox, G_CALLBACK(go_to_audio_video_page), G_CALLBACK(go_to_social_page), "Next", FALSE);
-    self->social_page = create_app_group_page(self, "Step 5: Social Apps and Internet", GROUP_SOCIAL, &self->social_flowbox, G_CALLBACK(go_to_text_documents_page), G_CALLBACK(go_to_drivers_page), "Next", FALSE);
-    self->drivers_page = create_app_group_page(self, "Step 6: Drivers", GROUP_DRIVERS, &self->drivers_flowbox, G_CALLBACK(go_to_social_page), G_CALLBACK(go_to_security_page), "Next", FALSE);
-    self->security_page = create_app_group_page(self, "Step 7: Security", GROUP_SECURITY, &self->security_flowbox, G_CALLBACK(go_to_social_page), G_CALLBACK(on_install_selected_clicked), "Install", TRUE);
+    self->gaming_page = create_app_group_page(self, "Step 1: Gaming Apps", GROUP_GAMING, &self->gaming_flowbox, G_CALLBACK(go_to_mirror_page), G_CALLBACK(go_to_drawing_image_page), "Next");
+    self->drawing_image_page = create_app_group_page(self, "Step 2: Drawing and Image Editing", GROUP_DRAWING_IMAGE, &self->drawing_image_flowbox, G_CALLBACK(go_to_gaming_page), G_CALLBACK(go_to_audio_video_page), "Next");
+    self->audio_video_page = create_app_group_page(self, "Step 3: Audio & Video Editing", GROUP_AUDIO_VIDEO, &self->audio_video_flowbox, G_CALLBACK(go_to_drawing_image_page), G_CALLBACK(go_to_text_documents_page), "Next");
+    self->text_documents_page = create_app_group_page(self, "Step 4: Text Editing and Documents", GROUP_TEXT_DOCUMENTS, &self->text_documents_flowbox, G_CALLBACK(go_to_audio_video_page), G_CALLBACK(go_to_social_page), "Next");
+    self->social_page = create_app_group_page(self, "Step 5: Social Apps and Internet", GROUP_SOCIAL, &self->social_flowbox, G_CALLBACK(go_to_text_documents_page), G_CALLBACK(go_to_drivers_page), "Next");
+    self->drivers_page = create_app_group_page(self, "Step 6: Drivers", GROUP_DRIVERS, &self->drivers_flowbox, G_CALLBACK(go_to_social_page), G_CALLBACK(go_to_security_page), "Next");
+    self->security_page = create_app_group_page(self, "Step 7: Security", GROUP_SECURITY, &self->security_flowbox, G_CALLBACK(go_to_social_page), G_CALLBACK(on_install_selected_clicked), "Install");
     build_finished_page(self);
 
     gtk_stack_add_named(GTK_STACK(self->stack), self->welcome_page, "welcome");
@@ -942,29 +948,6 @@ static void neko_store_window_dispose(GObject *object) {
     G_OBJECT_CLASS(neko_store_window_parent_class)->dispose(object);
 }
 
-static void on_window_map(GtkWidget *widget, gpointer data) {
-#ifdef GDK_WINDOWING_X11
-    GdkSurface *surface = gtk_native_get_surface(GTK_NATIVE(widget));
-    if (surface && GDK_IS_X11_SURFACE(surface)) {
-        Display *xdisplay = gdk_x11_display_get_xdisplay(gdk_surface_get_display(surface));
-        Window xid = gdk_x11_surface_get_xid(surface);
-
-        int w = gtk_widget_get_width(widget);
-        int h = gtk_widget_get_height(widget);
-        if (w <= 0) w = 1000;
-        if (h <= 0) h = 700;
-
-        int screen = DefaultScreen(xdisplay);
-        int sw = DisplayWidth(xdisplay, screen);
-        int sh = DisplayHeight(xdisplay, screen);
-
-        if (sw > w && sh > h) {
-            XMoveWindow(xdisplay, xid, (sw - w) / 2, (sh - h) / 2);
-        }
-    }
-#endif
-}
-
 /* --- Live theme reload -----------------------------------------------------
  * GTK reads ~/.config/gtk-4.0/gtk.css exactly once, at startup, and never
  * watches it afterwards. Noctalia rewrites the colours it pulls in whenever the
@@ -993,6 +976,11 @@ static void reload_user_theme_css(void) {
 
 static void on_theme_dir_changed(GFileMonitor *monitor, GFile *file, GFile *other_file,
                                  GFileMonitorEvent event, gpointer user_data) {
+    // Only the event type is needed; preserve the GFileMonitor signal signature.
+    (void)monitor;
+    (void)file;
+    (void)other_file;
+    (void)user_data;
     if (event == G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT ||
         event == G_FILE_MONITOR_EVENT_CREATED ||
         event == G_FILE_MONITOR_EVENT_RENAMED) {
@@ -1059,8 +1047,7 @@ NekoStoreWindow *neko_store_window_new (GtkApplication *app) {
     watch_user_theme();
     force_square_corners();
 
-    g_signal_connect(window, "map", G_CALLBACK(on_window_map), NULL);
-
+    // Let the window manager place the window on both X11 and Wayland.
     gtk_window_maximize(GTK_WINDOW(window));
     gtk_window_present (GTK_WINDOW (window));
     return window;
