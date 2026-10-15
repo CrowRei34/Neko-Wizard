@@ -451,6 +451,8 @@ static GtkWidget *create_sidebar_button(NekoStoreWindow *self, const char *title
     GtkWidget *button = gtk_toggle_button_new();
     GtkWidget *label = gtk_label_new(title);
     gtk_label_set_xalign(GTK_LABEL(label), 0.0);
+    gtk_label_set_single_line_mode(GTK_LABEL(label), TRUE);
+    gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
     gtk_widget_set_hexpand(label, TRUE);
     gtk_button_set_child(GTK_BUTTON(button), label);
     gtk_widget_add_css_class(button, "sidebar-button");
@@ -608,7 +610,7 @@ static GtkWidget* create_app_group_page(NekoStoreWindow *self, int step_number, 
     gtk_widget_set_margin_top(flowbox, 16);
     gtk_widget_set_margin_bottom(flowbox, inner_pad);
     gtk_flow_box_set_min_children_per_line(GTK_FLOW_BOX(flowbox), 1);
-    gtk_flow_box_set_max_children_per_line(GTK_FLOW_BOX(flowbox), 2);
+    gtk_flow_box_set_max_children_per_line(GTK_FLOW_BOX(flowbox), 1);
     gtk_flow_box_set_homogeneous(GTK_FLOW_BOX(flowbox), TRUE);
     gtk_flow_box_set_selection_mode(GTK_FLOW_BOX(flowbox), GTK_SELECTION_NONE);
     gtk_flow_box_set_row_spacing(GTK_FLOW_BOX(flowbox), GRID_GAP);
@@ -1315,7 +1317,7 @@ static GtkWidget *build_sidebar(NekoStoreWindow *self) {
     self->navigation_buttons = g_ptr_array_new();
     GtkWidget *sidebar = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
     gtk_widget_add_css_class(sidebar, "app-sidebar");
-    gtk_widget_set_size_request(sidebar, 220, -1);
+    gtk_widget_set_size_request(sidebar, 250, -1);
     gtk_widget_set_hexpand(sidebar, FALSE);
     gtk_widget_set_vexpand(sidebar, TRUE);
     gtk_widget_set_halign(sidebar, GTK_ALIGN_START);
